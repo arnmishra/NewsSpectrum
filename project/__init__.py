@@ -15,6 +15,9 @@ if not os.path.isfile('project/credentials.txt'):
 	sys.exit(1)
 with open('project/credentials.txt') as f:
 	lines = f.readlines()
+	if len(lines) != 4 or lines[3] is None or lines[1] is None:
+		print('Please format credentials.txt as outlined in the README.md')
+		sys.exit(1)
 	indicoio_api_key = lines[3]
 	news_api_key = lines[1]
 
