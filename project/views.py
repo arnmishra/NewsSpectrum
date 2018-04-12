@@ -1,4 +1,4 @@
-from project import app, db
+from project import app, db, indicoio, newsapi
 from models import User
 from flask import render_template, url_for, request
 
