@@ -9,9 +9,9 @@ Today, we have the tools to reasonably categorize news on an ideological spectru
 Create a `credentials.txt` inside your `project` folder and enter api keys for
 NewsAPI key and Indicoio key on lines 2 and 4
 
-`
-# NewsAPI Key  
+~~~
+#NewsAPI Key  
   
-# Political Analysis Key  
+#Political Analysis Key  
   
-`
+~~~
