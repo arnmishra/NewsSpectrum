@@ -1,4 +1,5 @@
 from project import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     """ User Model with all data about a specific user. """
@@ -13,8 +14,14 @@ class User(db.Model):
         self.name = name
         self.email = email
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password)
         self.political_score = political_score
 
     def __repr__(self):
         return "<Room(name='%s', email='%d', username='%d', score='%d')>" % (self.name, self.email, self.username, self.political_score)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
