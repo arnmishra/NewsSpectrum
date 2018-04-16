@@ -1,5 +1,5 @@
 from project import app, login, db, indicoio, newsapi
-from models import User
+from .models import User
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
