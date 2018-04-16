@@ -1,4 +1,4 @@
-from project import db
+from project import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
@@ -8,14 +8,15 @@ class User(db.Model):
     email = db.Column(db.Integer)
     username = db.Column(db.Integer)
     password = db.Column(db.String)
-    political_score = db.Column(db.Integer)
+    political_score = db.Column(db.Integer) #1-9 scoring, 0 means not set
 
-    def __init__(self, name, email, username, password, political_score):
+    def __init__(self, name, email, username, password, active=True):
         self.name = name
         self.email = email
         self.username = username
         self.password = generate_password_hash(password)
-        self.political_score = political_score
+        self.political_score = 0
+        self.active = active
 
     def __repr__(self):
         return "<Room(name='%s', email='%d', username='%d', score='%d')>" % (self.name, self.email, self.username, self.political_score)
@@ -25,3 +26,13 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+    def is_active(self):
+        return self.active
+
+    def get_id(self):
+        return self.id
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
