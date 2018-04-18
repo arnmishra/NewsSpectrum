@@ -42,7 +42,7 @@ def signup():
     email = request.form["email"]
     username = request.form["username"]
     password = request.form["password"]
-    new_user = User(name, email, username, password, political_score=0)
+    new_user = User(name, email, username, password)
     db.session.add(new_user)
     db.session.commit()
     login_user(new_user)
@@ -58,11 +58,11 @@ def signup():
 def get_top_headlines(current_user):
     articles = []
     sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
-    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), category='general', language='en')
-    print(top_headlines)
-    # for headline in top_headlines['articles']:
-    #     article_name = headline['title']
-    #     description = headline['description']
-    #     url = headline['url']
-    #     articles.append([article_name, description, url])
+    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
+    for headline in top_headlines['articles']:
+        article_name = headline['title']
+        source = headline['source']['name']
+        description = headline['description']
+        url = headline['url']
+        articles.append([article_name, description, url, source])
     return articles
