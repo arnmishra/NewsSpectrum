@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+        <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+      <div class="ui container">
+        <div class="ui text menu">
+          <a class="item" href="/">
+            <h2 class='ui header'>
+              News Spectrum
+            </h2>
+          </a>
+          <h4 class='right item'>
+            Hi {{user}}!
+          </h4>
+          <a class="right item" href='/logout'>
+            Log Out
+          </a>
+        </div>
+        <div>
+          <p>Here are your suggested articles to read</p>
+          <div class="ui cards">
+            {% for article in articles %}
+              <div class="card">
+                <div class="content">
+                  <div class="header">
+                    {{ article[0] }}
+                  </div>
+                  <div class="meta">
+                    Friends of Veronika
+                  </div>
+                  <div class="description">
+                    {{ article[1] }}
+                  </div>
+                </div>
+                <div class="extra content">
+                  <div class="ui basic green button">
+                    <a href='{{article[2]}}'>
+                      Go to Link
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </body>
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
+
+    <script>
+      $(document).ready(function() {
+
+      });
+    </script>
+</html>

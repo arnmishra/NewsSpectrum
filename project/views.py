@@ -3,21 +3,20 @@ from .models import User
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
-@app.route("/", methods=['GET'])
-@login_required
+@app.route('/', methods=['GET'])
 def index():
-    """ Renders Home page
-    :return: index.html
-    """
-    return render_template("index.html")
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
     if current_user.is_authenticated:
-        return render_template('index.html')
-    if request.method == 'GET':
+        if current_user.political_score == 0:
+            articles = get_top_headlines(current_user)
+            return render_template('index.html', user=current_user.name, articles=articles)
+        else:
+            articles = get_top_headlines(current_user)
+            return render_template('profile.html', user=current_user.name, articles=articles)
+    elif request.method == 'GET':
         return render_template("login.html")
 
+@app.route('/login', methods=['POST'])
+def login():
     username = request.form["username"]
     password = request.form["password"]
 
@@ -25,6 +24,8 @@ def login():
     if user is None or not user.check_password(password):
         return render_template('login.html')
     login_user(user)
+    if user.political_score != 0:
+        return render_template('profile.html', user=user.name)
     return render_template('index.html')
 
 @app.route('/logout')
@@ -41,7 +42,7 @@ def signup():
     email = request.form["email"]
     username = request.form["username"]
     password = request.form["password"]
-    new_user = User(name, email, username, password)
+    new_user = User(name, email, username, password, political_score=0)
     db.session.add(new_user)
     db.session.commit()
     login_user(new_user)
@@ -54,6 +55,14 @@ def signup():
 3. Pass this text into the indicoio API to get political sentiment for each article
 4. Make list of articles that are of certain political sentiment and return to frontend
 '''
-def get_top_headlines():
+def get_top_headlines(current_user):
+    articles = []
     sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
     top_headlines = newsapi.get_top_headlines(sources=','.join(sources), category='general', language='en')
+    print(top_headlines)
+    # for headline in top_headlines['articles']:
+    #     article_name = headline['title']
+    #     description = headline['description']
+    #     url = headline['url']
+    #     articles.append([article_name, description, url])
+    return articles
