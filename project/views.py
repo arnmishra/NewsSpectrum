@@ -47,6 +47,13 @@ def signup():
     login_user(new_user)
     return render_template("index.html")
 
+'''
+1. Call NewsAPI get_top_headlines() to get top k articles
+2. Pass these articles and their links into the NewsPaperAPI to get all the text
+   for each article
+3. Pass this text into the indicoio API to get political sentiment for each article
+4. Make list of articles that are of certain political sentiment and return to frontend
+'''
 def get_top_headlines():
     sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
     top_headlines = newsapi.get_top_headlines(sources=','.join(sources), category='general', language='en')
