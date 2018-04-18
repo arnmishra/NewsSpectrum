@@ -46,3 +46,7 @@ def signup():
     db.session.commit()
     login_user(new_user)
     return render_template("index.html")
+
+def get_top_headlines():
+    sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
+    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), category='general', language='en')
