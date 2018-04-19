@@ -10,6 +10,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.Integer)
     password = db.Column(db.String)
     political_score = db.Column(db.Integer) #1-9 scoring, 0 means not set
+    target_scores = db.Column(db.PickleType)
+    change_score = db.Column(db.Integer) #net 10 likes on articles of a different score means changing your score
 
     def __init__(self, name, email, username, password, active=True):
         self.name = name
@@ -17,6 +19,7 @@ class User(db.Model, UserMixin):
         self.username = username
         self.password = generate_password_hash(password)
         self.political_score = 0
+        self.target_scores = [0]
         self.active = active
 
     def __repr__(self):
@@ -33,6 +36,16 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return self.id
+
+    def set_score(self, score):
+        self.political_score = score
+        if score > 5:
+            self.target_scores = [score, score - 1]
+        elif score < 5:
+            self.target_scores = [score, score + 1]
+        else:
+            self.target_scores = [4,5,6]
+        self.change_score = 10
 
 @login.user_loader
 def load_user(id):

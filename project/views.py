@@ -10,7 +10,7 @@ ARTICLES = []
 def index():
     global ARTICLES
     if current_user.is_authenticated:
-        if current_user.political_score == -1:
+        if current_user.political_score == 0:
             ARTICLES = get_top_headlines(current_user)
             return render_template('index.html', user=current_user.name, articles=ARTICLES)
         else:
@@ -71,7 +71,7 @@ def political_typology():
 
             try:
                 political_score = mapPoliticalTypologyToScore[political_typology]
-                current_user.political_score = political_score
+                current_user.set_score(political_score)
                 db.session.commit()
             except:
                 print("Error converting political typology to political score: " + political_typology)
@@ -85,3 +85,13 @@ def political_typology():
 def load_new_page():
     article_name = request.form["article_name"]
     return render_template("news_page.html", article=ARTICLES[article_name], user=current_user.name)
+
+@app.route('/article_review', methods=['POST'])
+def article_review():
+    score = request.form["score"]
+    if request.form["review"] == "disliked":
+        current_user.change_score += 1
+    else:
+        current_user.change_score -= 1
+    if current_user.change_score == 0:
+        current_user.set_score(current_user.target_score[1])

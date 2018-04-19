@@ -27,6 +27,12 @@
         <div class="ui segment">
             <p>{{ article["text"] }}</p>
         </div>
+        <form action="/article_review" method="post">
+          <input type="radio" name="review" value="liked"> Liked Article <br>
+          <input type="radio" name="review" value="disliked"> Disliked Article
+          <input type="hidden" name="score" value="{{ article["political_leaning"] }}">
+          <button>Submit</button>
+        </form>
       </div>
     </body>
 </html>

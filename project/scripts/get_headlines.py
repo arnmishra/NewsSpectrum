@@ -10,7 +10,8 @@ import copy
 '''
 def get_top_headlines(current_user):
     articles = {}
-    sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
+    sources = ['abc-news', 'associated-press', 'breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', \
+        'bbc-news', 'bloomberg', 'cnn', 'hacker-news', 'the-wall-street-journal']
     top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
     article_data = {}
     for headline in top_headlines['articles']:
@@ -25,7 +26,11 @@ def get_top_headlines(current_user):
         article_data["text"] = article.text
         try:
             political_leaning = indicoio.political(article_data["text"])
-            article_data["political_leaning"] = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+            score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+            if score not in current_user.target_scores:
+                continue
+            else:
+                article_data["political_leaning"] = score
         except:
             continue
         articles[copy.deepcopy(article_data["article_name"])] = copy.deepcopy(article_data)
