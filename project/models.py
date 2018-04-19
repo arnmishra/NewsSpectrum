@@ -1,3 +1,4 @@
+import datetime
 from project import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -50,3 +51,27 @@ class User(db.Model, UserMixin):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+class Articles(db.Model):
+    """ Articles Model with all data about the articles for the past day. """
+    id = db.Column(db.Integer, primary_key=True)
+    creation_date = db.Column(db.DateTime)
+    article_name = db.Column(db.String)
+    source = db.Column(db.String)
+    description = db.Column(db.String)
+    url = db.Column(db.String)
+    text = db.Column(db.String)
+    political_leaning = db.Column(db.Integer) #1-9 scoring
+
+    def __init__(self, article_name, source, description, url, text, political_leaning):
+        self.creation_date = datetime.datetime.now()
+        self.article_name = article_name
+        self.source = source
+        self.description = description
+        self.url = url
+        self.text = text
+        self.political_leaning = political_leaning
+
+    def __repr__(self):
+        return "<Articles(article_name='%s', url='%s', political_leaning='%i')>" % (self.article_name, self.url, self.political_leaning)

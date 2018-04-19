@@ -1,21 +1,21 @@
 from project import app, login, db
 from .scripts.get_headlines import get_top_headlines
-from .models import User
+from .models import User, Articles
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
-ARTICLES = []
 
 @app.route('/', methods=['GET'])
 def index():
-    global ARTICLES
     if current_user.is_authenticated:
         if current_user.political_score == 0:
-            ARTICLES = get_top_headlines(current_user)
-            return render_template('index.html', user=current_user.name, articles=ARTICLES)
+            return render_template('index.html')
         else:
-            ARTICLES = get_top_headlines(current_user)
-            return render_template('profile.html', user=current_user.name, articles=ARTICLES)
+            get_top_headlines(current_user)
+            articles = []
+            for score in current_user.target_scores:
+                articles += Articles.query.filter(Articles.political_leaning == score).all()
+            return render_template('profile.html', user=current_user.name, articles=articles)
     elif request.method == 'GET':
         return render_template("login.html")
 
@@ -77,21 +77,26 @@ def political_typology():
                 print("Error converting political typology to political score: " + political_typology)
 
             return redirect('/')
-            # return render_template('profile.html', user=current_user.name, articles=articles)
     elif request.method == 'GET':
         return redirect('/')
 
-@app.route('/load_news_page', methods=['POST'])
-def load_new_page():
-    article_name = request.form["article_name"]
-    return render_template("news_page.html", article=ARTICLES[article_name], user=current_user.name)
+@app.route('/load_news_page/<article_id>', methods=['POST'])
+def load_new_page(article_id=-1):
+    if article_id == -1:
+        return redirect("/")
+    return render_template("news_page.html", article=Articles.query.get(article_id), user=current_user.name)
 
 @app.route('/article_review', methods=['POST'])
 def article_review():
     score = request.form["score"]
+    if score == current_user.political_score:
+        return redirect("/")
     if request.form["review"] == "disliked":
         current_user.change_score += 1
     else:
         current_user.change_score -= 1
     if current_user.change_score == 0:
-        current_user.set_score(current_user.target_score[1])
+        current_user.set_score(current_user.target_scores[1])
+    db.session.commit()
+    print (current_user.change_score)
+    return redirect("/")

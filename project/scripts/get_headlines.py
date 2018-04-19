@@ -1,6 +1,7 @@
-from project import newsapi, indicoio
+from project import newsapi, indicoio, db
+from ..models import Articles
 from newspaper import Article
-import copy
+import datetime
 '''
 1. Call NewsAPI get_top_headlines() to get top k articles
 2. Pass these articles and their links into the NewsPaperAPI to get all the text
@@ -9,32 +10,29 @@ import copy
 4. Make list of articles that are of certain political sentiment and return to frontend
 '''
 def get_top_headlines(current_user):
-    articles = {}
+    clear_old_data()
     sources = ['abc-news', 'associated-press', 'breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', \
-        'bbc-news', 'bloomberg', 'cnn', 'hacker-news', 'the-wall-street-journal']
-    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
-    article_data = {}
+        'bbc-news', 'bloomberg', 'cnn', 'hacker-news', 'the-wall-street-journal', 'daily-mail']
+    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en', page_size=100)
     for headline in top_headlines['articles']:
-        article_data["article_name"] = headline['title']
-        article_data["source"] = headline['source']['name']
-        article_data["description"] = headline['description']
-        article_data["url"] = headline['url']
-        article = Article(article_data["url"],"en")
-        article.download()
-        article_data['html'] = article.html
-        article.parse()
-        article_data["text"] = article.text
-        try:
-            political_leaning = indicoio.political(article_data["text"])
-            score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
-            if score not in current_user.target_scores:
-                continue
-            else:
-                article_data["political_leaning"] = score
-        except:
+        title = headline['title']
+        source = headline['source']['name']
+        if Articles.query.filter(Articles.article_name==title).filter(Articles.source==source).first() != None:
             continue
-        articles[copy.deepcopy(article_data["article_name"])] = copy.deepcopy(article_data)
-    return articles
+        description = headline['description']
+        url = headline['url']
+        article = Article(url,"en")
+        article.download()
+        article.parse()
+        text = article.text
+        try:
+            political_leaning = indicoio.political(text)
+            score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+            new_article = Articles(title, source, description, url, text, score)
+            db.session.add(new_article)
+        except Exception as e:
+            continue
+    db.session.commit()
 
 def calculate_political_score(liberal,conservative):
     score = 0
@@ -43,3 +41,7 @@ def calculate_political_score(liberal,conservative):
     else:
         score = round(conservative/(liberal+conservative) * 9)
     return score
+
+def clear_old_data():
+    Articles.query.filter(Articles.creation_date < datetime.datetime.now()-datetime.timedelta(days=1)).delete()
+    db.session.commit()

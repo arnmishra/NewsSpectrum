@@ -30,22 +30,21 @@
               <div class="card">
                 <div class="content">
                   <div class="header">
-                    {{ articles[article]["article_name"] }}
+                    {{ article.article_name }}
                   </div>
                   <div class="meta">
-                    {{ articles[article]["source"] }}
+                    {{ article.source }}
                   </div>
                   <div class="description">
-                    {{ articles[article]["description"] }}
+                    {{ article.description }}
                   </div>
                   <br>
                   <div class="political">
-                    Political Leaning Score: {{ articles[article]["political_leaning"] }}
+                    Political Leaning Score: {{ article.political_leaning }}
                   </div>
                 </div>
                 <div class="extra content">
-                    <form action="/load_news_page" method="post">
-                      <input type="hidden" name="article_name" value="{{ articles[article]["article_name"] }}"><br />
+                    <form action="/load_news_page/{{ article.id }} " method="post">
                       <button class="ui basic green button">Read Article</button>
                     </form>
                 </div>
