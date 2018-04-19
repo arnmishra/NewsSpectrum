@@ -4,8 +4,9 @@ Today, we have the tools to reasonably categorize news on an ideological spectru
 # Work in Progress
 
 # Installation instructions
-`pip2.7 install newsapi-python`  
-`pip2.7 install indicoio`  
+`pip install newsapi-python`  
+`pip install indicoio`  
+`pip install newspaper3k
 Create a `credentials.txt` inside your `project` folder and enter api keys for
 NewsAPI key and Indicoio key on lines 2 and 4
 
