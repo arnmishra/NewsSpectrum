@@ -18,9 +18,13 @@
           <div id="submitModalButton" class='ui positive right labeled icon button item' >
             Submit Political Typology
           </div>
-          <a class="right item" href='/logout'>
-            Log Out
-          </a>
+          <div class='ui right dropdown item'>
+            {{ user }}
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a class="item" href="/logout">Log Out</a>
+            </div>
+          </div>
         </div>
 
 
@@ -69,6 +73,7 @@
     <script>
       $(document).ready(function() {
         $('#promptModal').modal('show');
+        $('.ui.dropdown').dropdown();
 
         $('#confirmPromptModalButton').click(function() {
           $('#promptModal').modal('hide');

@@ -1,7 +1,8 @@
 from project import db, login
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """ User Model with all data about a specific user. """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -19,7 +20,7 @@ class User(db.Model):
         self.active = active
 
     def __repr__(self):
-        return "<Room(name='%s', email='%d', username='%d', score='%d')>" % (self.name, self.email, self.username, self.political_score)
+        return "<User(name='%s', email='%s', username='%s', score='%d')>" % (self.name, self.email, self.username, self.political_score)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

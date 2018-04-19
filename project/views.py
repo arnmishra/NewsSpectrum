@@ -3,21 +3,20 @@ from .models import User
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
-@app.route("/", methods=['GET'])
-@login_required
+@app.route('/', methods=['GET'])
 def index():
-    """ Renders Home page
-    :return: index.html
-    """
-    return render_template("index.html")
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
     if current_user.is_authenticated:
-        return render_template('index.html')
-    if request.method == 'GET':
+        if current_user.political_score == 0:
+            articles = get_top_headlines(current_user)
+            return render_template('index.html', user=current_user.name, articles=articles)
+        else:
+            articles = get_top_headlines(current_user)
+            return render_template('profile.html', user=current_user.name, articles=articles)
+    elif request.method == 'GET':
         return render_template("login.html")
 
+@app.route('/login', methods=['POST'])
+def login():
     username = request.form["username"]
     password = request.form["password"]
 
@@ -25,7 +24,9 @@ def login():
     if user is None or not user.check_password(password):
         return render_template('login.html')
     login_user(user)
-    return render_template('index.html')
+    if user.political_score != 0:
+        return redirect('/')
+    return redirect('/')
 
 @app.route('/logout')
 def logout():
@@ -49,28 +50,33 @@ def signup():
 
 @app.route('/political-typology', methods=['POST'])
 def political_typology():
-    if request.method == 'POST':
-        political_typology = request.form["political_typology"]
+    if current_user.is_authenticated:
+        if request.method == 'POST':
+            political_typology = request.form["political_typology"]
 
-        mapPoliticalTypologyToScore = {
-            "Solid Liberals": 1,
-            "Opportunity Democrats": 2,
-            "Disaffected Democrats": 3,
-            "Devout and Diverse": 4,
-            "New Era Enterprisers": 5,
-            "Market Skeptic Republicans": 6,
-            "Country First Conservaties": 7,
-            "Core Conservatives": 8,
-            "Bystanders": 9
-        }
+            mapPoliticalTypologyToScore = {
+                "Solid Liberals": 1,
+                "Opportunity Democrats": 2,
+                "Disaffected Democrats": 3,
+                "Devout and Diverse": 4,
+                "New Era Enterprisers": 5,
+                "Market Skeptic Republicans": 6,
+                "Country First Conservaties": 7,
+                "Core Conservatives": 8,
+                "Bystanders": 9
+            }
 
-        try:
-            political_score = mapPoliticalTypologyToScore[political_typology]
-            # TODO: Update political score for user
-        except:
-            print("Error converting political typology to political score: " + political_typology)
+            try:
+                political_score = mapPoliticalTypologyToScore[political_typology]
+                current_user.political_score = political_score
+                db.session.commit()
+            except:
+                print("Error converting political typology to political score: " + political_typology)
 
-        return render_template("home.html", political_typology=political_typology)
+            return redirect('/')
+            # return render_template('profile.html', user=current_user.name, articles=articles)
+    elif request.method == 'GET':
+        return redirect('/')
 
 '''
 1. Call NewsAPI get_top_headlines() to get top k articles
@@ -79,6 +85,14 @@ def political_typology():
 3. Pass this text into the indicoio API to get political sentiment for each article
 4. Make list of articles that are of certain political sentiment and return to frontend
 '''
-def get_top_headlines():
+def get_top_headlines(current_user):
+    articles = []
     sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
-    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), category='general', language='en')
+    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
+    for headline in top_headlines['articles']:
+        article_name = headline['title']
+        source = headline['source']['name']
+        description = headline['description']
+        url = headline['url']
+        articles.append([article_name, description, url, source])
+    return articles

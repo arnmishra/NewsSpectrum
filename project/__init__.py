@@ -23,7 +23,7 @@ with open('project/credentials.txt') as f:
 		print('Please format credentials.txt as outlined in the README.md')
 		sys.exit(1)
 	indicoio_api_key = lines[3]
-	news_api_key = lines[1]
+	news_api_key = lines[1].strip()
 
 indicoio.config.api_key = indicoio_api_key
 newsapi = NewsApiClient(api_key=str(news_api_key))
