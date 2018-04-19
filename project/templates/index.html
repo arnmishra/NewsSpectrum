@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Home</title>
+        <title>News Spectrum</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
         <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
@@ -15,6 +15,9 @@
               News Spectrum
             </h2>
           </a>
+          <div id="submitModalButton" class='ui positive right labeled icon button item' >
+            Submit Political Typology
+          </div>
           <a class="right item" href='/logout'>
             Log Out
           </a>
@@ -24,18 +27,35 @@
         <iframe id="pew20055360" src="http://www.people-press.org/quiz/political-typology/iframe/" height="300px" width="100%" scrolling="no" frameborder="0"></iframe><script type='text/javascript'id='pew-iframe'>(function(){function async_load(){var s=document.createElement('script');s.type='text/javascript';s.async=true;s.src='http://www.pewresearch.org/people-press/wp-content/plugins/pew-scripts/js/iframeResizer.min.js';s.onload=s.onreadystatechange=function(){var rs=this.readyState;try{iFrameResize([],'iframe#pew20055360')}catch(e){}};var embedder=document.getElementById('pew-iframe');embedder.parentNode.insertBefore(s,embedder)}if(window.attachEvent)window.attachEvent('onload',async_load);else window.addEventListener('load',async_load,false)})();</script>
       </div>
 
+      <!-- Modal to prompt user to take survey -->
       <div class='ui basic modal' id="promptModal">
-        <div class="ui basic segment">
-          <div class="content text">
-            Hey! Welcome to NewsSpectrum. Please fill out the following survey on your political views in order to determine your political typology.
-            Once you are finished, please enter your result into the form at the top.
+        <div class="header">
+          Welcome to News Spectrum
+        </div>
+        <div class="content">
+          Hey! Welcome to NewsSpectrum. Please fill out the following survey on your political views in order to determine your political typology.
+          Once you are finished, please click `Submit Political Typology` in the menu and enter your results.
+          <br><br>
+          <div id="confirmPromptModalButton" class='ui positive right labeled icon button' >
+            Got it!
+            <i class='checkmark icon'></i>
           </div>
-          <div class="content">
-            <div id="confirmPromptModalButton" class='ui positive right labeled icon button' >
-              Got it!
-              <i class='checkmark icon'></i>
+        </div>
+      </div>
+
+      <!-- Modal to submit political typology -->
+      <div class='ui basic modal' id='submitModal'>
+        <div class='header'>
+          Submit Political Typology
+        </div>
+        <div class="content">
+          <form action="/political-typology" method="post" class="ui form">
+            <div class="field">
+              <label>Political Typology</label>
+              <input type="text" placeholder="Political Typology" name="political_typology" required>
             </div>
-          </div>
+            <button class="ui button" type="submit">Submit</button>
+          </form>
         </div>
       </div>
     </body>
@@ -48,10 +68,14 @@
 
     <script>
       $(document).ready(function() {
-        $('.ui.modal').modal('show');
+        $('#promptModal').modal('show');
 
         $('#confirmPromptModalButton').click(function() {
           $('#promptModal').modal('hide');
+        });
+
+        $('#submitModalButton').click(function() {
+          $('#submitModal').modal('show');
         });
       });
     </script>

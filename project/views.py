@@ -47,6 +47,31 @@ def signup():
     login_user(new_user)
     return render_template("index.html")
 
+@app.route('/political-typology', methods=['POST'])
+def political_typology():
+    if request.method == 'POST':
+        political_typology = request.form["political_typology"]
+
+        mapPoliticalTypologyToScore = {
+            "Solid Liberals": 1,
+            "Opportunity Democrats": 2,
+            "Disaffected Democrats": 3,
+            "Devout and Diverse": 4,
+            "New Era Enterprisers": 5,
+            "Market Skeptic Republicans": 6,
+            "Country First Conservaties": 7,
+            "Core Conservatives": 8,
+            "Bystanders": 9
+        }
+
+        try:
+            political_score = mapPoliticalTypologyToScore[political_typology]
+            # TODO: Update political score for user
+        except:
+            print("Error converting political typology to political score: " + political_typology)
+
+        return render_template("home.html", political_typology=political_typology)
+
 '''
 1. Call NewsAPI get_top_headlines() to get top k articles
 2. Pass these articles and their links into the NewsPaperAPI to get all the text

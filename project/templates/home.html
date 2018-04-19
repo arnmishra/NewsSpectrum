@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>News Spectrum</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+        <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+      <div class="ui container">
+        <div class="ui text menu">
+          <a class="item" href="/">
+            <h2 class='ui header'>
+              News Spectrum
+            </h2>
+          </a>
+          <a class="right item" href='/logout'>
+            Log Out
+          </a>
+        </div>
+
+        Display all your news here. Your political typology is {{ political_typology }}.
+      </div>
+    </body>
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
+</html>

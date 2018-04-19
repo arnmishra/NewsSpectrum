@@ -3,14 +3,46 @@
 	<head>
 	    <meta charset="UTF-8">
 	    <title>Login</title>
+
+	    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+      <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 	</head>
 
 	<body>
-		<form action="/login" method="post">
-		    Username: <input type="text" placeholder="Enter Username" name="username" required><br>
-			Password: <input type="password" placeholder="Enter Password" name="password" required><br>
-		    <button type="submit">Login</button><br>
-		</form>
-		Don't have an account? <a href="/signup">Sign up here!</a>
+		<div class='ui container centered grid'>
+			<div class="row">
+				<div class="ui text menu">
+		      <a class="item" href="/">
+		        <h2 class='ui header'>
+		          News Spectrum
+		        </h2>
+		      </a>
+		    </div>
+	    </div>
+
+	    <div class="row">
+				<form action="/login" method="post" class='ui form'>
+					<div class="field">
+						<label>Username</label>
+						<input type="text" placeholder="Username" name="username" required>
+					</div>
+					<div class="field">
+						<label>Password</label>
+						<input type="password" placeholder="Password" name="password" required><br>
+					</div>
+			    <button type="submit" class="ui button">Login</button>
+				</form>
+			</div>
+
+			<div class="row">
+				<span>Don't have an account? <a href="/signup"> Sign up here!</a></span>
+			</div>
+		</div>
 	</body>
+
+	<script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
 </html>
