@@ -24,8 +24,17 @@ def get_top_headlines(current_user):
         article.parse()
         article_data["text"] = article.text
         try:
-            article_data["political_leaning"] = indicoio.political(article_data["text"])
+            political_leaning = indicoio.political(article_data["text"])
+            article_data["political_leaning"] = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
         except:
             continue
         articles[copy.deepcopy(article_data["article_name"])] = copy.deepcopy(article_data)
     return articles
+
+def calculate_political_score(liberal,conservative):
+    score = 0
+    if liberal < conservative:
+        score = 9-round(liberal/(liberal+conservative) * 9)
+    else:
+        score = round(conservative/(liberal+conservative) * 9)
+    return score
