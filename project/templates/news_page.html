@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>News Spectrum</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+        <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+    	<p>{{ article["article_name"] }}</p>
+    	<p>{{ article["text"] }}</p>
+    </body>
+</html>

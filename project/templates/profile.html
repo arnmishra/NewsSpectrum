@@ -30,25 +30,23 @@
               <div class="card">
                 <div class="content">
                   <div class="header">
-                    {{ article["article_name"] }}
+                    {{ articles[article]["article_name"] }}
                   </div>
                   <div class="meta">
-                    {{ article["source"] }}
+                    {{ articles[article]["source"] }}
                   </div>
                   <div class="description">
-                    {{ article["description"] }}
+                    {{ articles[article]["description"] }}
                   </div>
                   <br>
                   <div class="political">
-                    {{ article["political_leaning"] }}
+                    {{ articles[article]["political_leaning"] }}
                   </div>
                 </div>
                 <div class="extra content">
-                  <div class="ui basic green button">
-                    <a href='{{article["url"]}}'>
-                      Go to Link
-                    </a>
-                  </div>
+                    <form action="/load_news_page" method="post">
+                      <input type="hidden" name="article_name" value="{{ articles[article]["article_name"] }}"><br />
+                      <button class="ui basic green button">Read Article</button>
                 </div>
               </div>
             {% endfor %}

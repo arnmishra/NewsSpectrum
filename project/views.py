@@ -4,15 +4,18 @@ from .models import User
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
 
+ARTICLES = []
+
 @app.route('/', methods=['GET'])
 def index():
+    global ARTICLES
     if current_user.is_authenticated:
         if current_user.political_score == -1:
-            articles = get_top_headlines(current_user)
-            return render_template('index.html', user=current_user.name, articles=articles)
+            ARTICLES = get_top_headlines(current_user)
+            return render_template('index.html', user=current_user.name, articles=ARTICLES)
         else:
-            articles = get_top_headlines(current_user)
-            return render_template('profile.html', user=current_user.name, articles=articles)
+            ARTICLES = get_top_headlines(current_user)
+            return render_template('profile.html', user=current_user.name, articles=ARTICLES)
     elif request.method == 'GET':
         return render_template("login.html")
 
@@ -78,3 +81,8 @@ def political_typology():
     elif request.method == 'GET':
         return redirect('/')
 
+@app.route('/load_news_page', methods=['POST'])
+def load_new_page():
+    article_name = request.form["article_name"]
+    print (article_name)
+    return render_template("news_page.html", article=ARTICLES[article_name])

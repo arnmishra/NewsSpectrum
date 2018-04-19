@@ -9,7 +9,7 @@ import copy
 4. Make list of articles that are of certain political sentiment and return to frontend
 '''
 def get_top_headlines(current_user):
-    articles = []
+    articles = {}
     sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
     top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
     article_data = {}
@@ -26,5 +26,5 @@ def get_top_headlines(current_user):
             article_data["political_leaning"] = indicoio.political(article_data["text"])
         except:
             continue
-        articles.append(copy.deepcopy(article_data))
+        articles[article_data["article_name"]] = copy.deepcopy(article_data)
     return articles
