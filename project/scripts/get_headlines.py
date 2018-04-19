@@ -20,11 +20,12 @@ def get_top_headlines(current_user):
         article_data["url"] = headline['url']
         article = Article(article_data["url"],"en")
         article.download()
+        article_data['html'] = article.html
         article.parse()
         article_data["text"] = article.text
         try:
             article_data["political_leaning"] = indicoio.political(article_data["text"])
         except:
             continue
-        articles[article_data["article_name"]] = copy.deepcopy(article_data)
+        articles[copy.deepcopy(article_data["article_name"])] = copy.deepcopy(article_data)
     return articles
