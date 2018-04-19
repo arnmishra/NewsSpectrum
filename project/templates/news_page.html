@@ -8,7 +8,25 @@
         <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
-    	<p>{{ article["article_name"] }}</p>
-    	<p>{{ article["text"] }}</p>
+      <div class="ui container">
+        <div class="ui text menu">
+          <a class="item" href="/">
+            <h2 class='ui header'>
+              News Spectrum
+            </h2>
+          </a>
+          <div class='ui right dropdown item'>
+            {{ user }}
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a class="item" href="/logout">Log Out</a>
+            </div>
+          </div>
+        </div>
+        <h2 class="ui header">{{ article["article_name"] }}</h2>
+        <div class="ui segment">
+            <p>{{ article["text"] }}</p>
+        </div>
+      </div>
     </body>
 </html>

@@ -84,5 +84,5 @@ def political_typology():
 @app.route('/load_news_page', methods=['POST'])
 def load_new_page():
     article_name = request.form["article_name"]
-    print (article_name)
-    return render_template("news_page.html", article=ARTICLES[article_name])
+    print(article_name)
+    return render_template("news_page.html", article=ARTICLES[article_name], user=current_user.name)
