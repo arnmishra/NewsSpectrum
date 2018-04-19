@@ -30,18 +30,22 @@
               <div class="card">
                 <div class="content">
                   <div class="header">
-                    {{ article[0] }}
+                    {{ article["article_name"] }}
                   </div>
                   <div class="meta">
-                    {{ article[3] }}
+                    {{ article["source"] }}
                   </div>
                   <div class="description">
-                    {{ article[1] }}
+                    {{ article["description"] }}
+                  </div>
+                  <br>
+                  <div class="political">
+                    {{ article["political_leaning"] }}
                   </div>
                 </div>
                 <div class="extra content">
                   <div class="ui basic green button">
-                    <a href='{{article[2]}}'>
+                    <a href='{{article["url"]}}'>
                       Go to Link
                     </a>
                   </div>

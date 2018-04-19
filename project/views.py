@@ -1,4 +1,5 @@
-from project import app, login, db, indicoio, newsapi
+from project import app, login, db
+from .scripts.get_headlines import get_top_headlines
 from .models import User
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
@@ -6,7 +7,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 @app.route('/', methods=['GET'])
 def index():
     if current_user.is_authenticated:
-        if current_user.political_score == 0:
+        if current_user.political_score == -1:
             articles = get_top_headlines(current_user)
             return render_template('index.html', user=current_user.name, articles=articles)
         else:
@@ -37,7 +38,6 @@ def logout():
 def signup():
     if request.method == 'GET':
         return render_template('signup.html')
-
     name = request.form["name"]
     email = request.form["email"]
     username = request.form["username"]
@@ -78,21 +78,3 @@ def political_typology():
     elif request.method == 'GET':
         return redirect('/')
 
-'''
-1. Call NewsAPI get_top_headlines() to get top k articles
-2. Pass these articles and their links into the NewsPaperAPI to get all the text
-   for each article
-3. Pass this text into the indicoio API to get political sentiment for each article
-4. Make list of articles that are of certain political sentiment and return to frontend
-'''
-def get_top_headlines(current_user):
-    articles = []
-    sources = ['breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', 'buzzfeed']
-    top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en')
-    for headline in top_headlines['articles']:
-        article_name = headline['title']
-        source = headline['source']['name']
-        description = headline['description']
-        url = headline['url']
-        articles.append([article_name, description, url, source])
-    return articles
