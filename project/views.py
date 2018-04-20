@@ -3,6 +3,7 @@ from .scripts.get_headlines import get_top_headlines
 from .models import User, Articles
 from flask import render_template, url_for, request, redirect
 from flask_login import current_user, login_user, logout_user, login_required
+from random import shuffle
 
 
 @app.route('/', methods=['GET'])
@@ -11,10 +12,11 @@ def index():
         if current_user.political_score == 0:
             return render_template('index.html')
         else:
-            get_top_headlines(current_user)
+            get_top_headlines()
             articles = []
             for score in current_user.target_scores:
                 articles += Articles.query.filter(Articles.political_leaning == score).all()
+                shuffle(articles)
             return render_template('profile.html', user=current_user.name, articles=articles)
     elif request.method == 'GET':
         return render_template("login.html")
