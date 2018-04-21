@@ -64,14 +64,18 @@ class Articles(db.Model):
     text = db.Column(db.String)
     political_leaning = db.Column(db.Integer) #1-9 scoring
 
-    def __init__(self, article_name, source, description, url, text, political_leaning):
+    def __init__(self, article_name, source, description, url):
         self.creation_date = datetime.datetime.now()
         self.article_name = article_name
         self.source = source
         self.description = description
         self.url = url
-        self.text = text
-        self.political_leaning = political_leaning
 
     def __repr__(self):
         return "<Articles(article_name='%s', url='%s', political_leaning='%i')>" % (self.article_name, self.url, self.political_leaning)
+
+    def set_text(self,text):
+        self.text = text
+
+    def set_score(self,score):
+        self.political_leaning = score

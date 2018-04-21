@@ -16,36 +16,56 @@ def get_top_headlines():
     sources = ['abc-news', 'associated-press', 'breitbart-news', 'fox-news', 'reuters', 'the-economist', 'the-new-york-times', \
         'bbc-news', 'bloomberg', 'cnn', 'hacker-news', 'the-wall-street-journal', 'daily-mail']
     top_headlines = newsapi.get_top_headlines(sources=','.join(sources), language='en', page_size=100)
-    threads = []
+    url_text = {}
+    url_score = {}
+    new_articles = []
     for headline in top_headlines['articles']:
-        thread = Thread(target=get_article_data, args=(headline, ))
-        threads.append(thread)
-        thread.daemon = True
-        thread.start()
+        title = headline['title']
+        source = headline['source']['name']
+        if Articles.query.filter(Articles.article_name==title).filter(Articles.source==source).first() != None:
+            return
+        description = headline['description']
+        url = headline['url']
+        url_text[url] = ""
+        url_score[url] = 0
+        new_articles.append(Articles(title, source, description, url))
+    threads = []
+    for url in url_text:
+        article = Article(url,"en")
+        threads.append(create_url_data_thread(url, url_text))
     for thread in threads:
         thread.join()
 
-def get_article_data(headline):
-    title = headline['title']
-    source = headline['source']['name']
-    if Articles.query.filter(Articles.article_name==title).filter(Articles.source==source).first() != None:
-        return
-    description = headline['description']
-    url = headline['url']
+    political_leanings = indicoio.political(list(url_text.values()))
+    urls = url_text.keys()
+    for political_leaning,url in zip(political_leanings,urls):
+        url_score[url] = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+
+    for new_article in new_articles:
+        try:
+            new_article.set_score(url_score[new_article.url])
+            new_article.set_text(url_text[new_article.url])
+            db.session.add(new_article)
+        except:
+            continue
+    db.session.commit()
+
+def create_url_data_thread(url, url_text):
+    thread = Thread(target=get_article_data, args=(url, url_text, ))
+    thread.daemon = True
+    thread.start()
+    return thread
+
+def get_article_data(url, url_text):
     article = Article(url,"en")
     article.download()
     article.parse()
     text = article.text
-    new_article = []
-    try:
-        political_leaning = indicoio.political(text)
-        score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
-        new_article = Articles(title, source, description, url, text, score)
-    except Exception as e:
-        print("Exception", e)
-        return
-    db.session.add(new_article)
-    db.session.commit()
+    if len(text) == 0:
+        del url_text[url]
+    else:
+        url_text[url] = text
+    
 
 def calculate_political_score(liberal,conservative):
     score = 0
