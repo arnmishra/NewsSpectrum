@@ -5,7 +5,7 @@
         <title>News Spectrum</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
-        <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
     </head>
     <body>
       <div class="ui container">
@@ -28,11 +28,22 @@
             <p>{{ article.text }}</p>
         </div>
         <form action="/article_review" method="post">
-          <input type="radio" name="review" value="liked"> Liked Article <br>
-          <input type="radio" name="review" value="disliked"> Disliked Article <br>
+          <button class='ui basic green button' name='review' value='liked' type='submit'>
+            <i class="thumbs up icon"></i>
+            Liked Article
+          </button>
+          <button class='ui basic red button' name='review' value='disliked' type='submit'>
+            <i class="thumbs down icon"></i>
+            Disliked Article
+          </button>
           <input type="hidden" name="score" value="{{ article.political_leaning }}">
-          <button>Submit</button>
         </form>
       </div>
     </body>
+
+    <script>
+      $(document).ready(function() {
+        $('.ui.dropdown').dropdown();
+      });
+    </script>
 </html>

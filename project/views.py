@@ -51,7 +51,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
     login_user(new_user)
-    return render_template("index.html")
+    return redirect('/')
 
 @app.route('/political-typology', methods=['POST'])
 def political_typology():

@@ -1,7 +1,7 @@
-.content.text {
-  line-height: 1.5;
+.thumbs.up.icon:hover {
+  color: green;
 }
 
-.HELLO {
-  font-weight: bold !important;
+.thumbs.down.icon:hover {
+  color: red;
 }
