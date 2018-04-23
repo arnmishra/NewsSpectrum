@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+  <head>
+    <title>News Spectrum</title>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <h1>News Spectrum</h1>
+    <p id="logged_in" style="display:none">You are logged in!</p>
+    <p id="not_logged_in" style="display:none">You are not logged in! Please go to <a href="http://localhost:5000" onclick="chrome.tabs.create({url:this.href})">localhost:5000</a> to log in</p>
+  </body>
+</html>

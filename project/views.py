@@ -1,9 +1,11 @@
-from project import app, login, db
-from .scripts.get_headlines import get_top_headlines
+from project import app, login, db, indicoio
+from .scripts.get_headlines import get_top_headlines, calculate_political_score
 from .models import User, Articles
-from flask import render_template, url_for, request, redirect
+from flask import render_template, url_for, request, redirect, make_response, Response
 from flask_login import current_user, login_user, logout_user, login_required
 from random import shuffle
+import json
+from newspaper import Article
 
 
 @app.route('/', methods=['GET'])
@@ -29,15 +31,18 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user is None or not user.check_password(password):
         return render_template('login.html')
-    login_user(user)
-    if user.political_score != 0:
-        return redirect('/')
-    return redirect('/')
+    login_user(user, remember=True)
+    resp = make_response(redirect('/'))
+    resp.set_cookie('username', username)
+    return resp 
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect("/")
+    res = make_response(redirect('/'))
+    if request.cookies.get('username'):
+        res.set_cookie('username', '', expires=0)
+    return res
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -102,3 +107,19 @@ def article_review():
     db.session.commit()
     print (current_user.change_score)
     return redirect("/")
+
+@app.route('/chrome_extension', methods=['POST'])
+def chrome_extension():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        article = Article(data['url'],"en")
+        article.download()
+        article.parse()
+        text = article.text
+        political_leaning = indicoio.political(text)
+        score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+        print("URL: ", data['url'])
+        print(political_leaning)
+        print("Political score: ", score)
+    return Response(status=200)
+
