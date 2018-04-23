@@ -10,7 +10,7 @@ from random import shuffle
 def index():
     if current_user.is_authenticated:
         if current_user.political_score == 0:
-            return render_template('index.html')
+            return render_template('index.html', user=current_user.name)
         else:
             get_top_headlines()
             articles = []
