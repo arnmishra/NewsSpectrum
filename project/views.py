@@ -12,7 +12,7 @@ from newspaper import Article
 def index():
     if current_user.is_authenticated:
         if current_user.political_score == 0:
-            return render_template('index.html')
+            return render_template('index.html', user=current_user.name)
         else:
             get_top_headlines()
             articles = []
@@ -56,7 +56,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
     login_user(new_user)
-    return render_template("index.html")
+    return redirect('/')
 
 @app.route('/political-typology', methods=['POST'])
 def political_typology():

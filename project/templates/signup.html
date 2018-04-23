@@ -3,15 +3,49 @@
 	<head>
 	    <meta charset="UTF-8">
 	    <title>Signup</title>
+
+	    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
 	</head>
 
 	<body>
-		<form action="/signup" method="post">
-			Name: <input type="text" placeholder="Enter Your Name" name="name" required><br>
-			Email: <input type="text" placeholder="Enter Your Email" name="email" required><br>
-		    Username: <input type="text" placeholder="Enter Username" name="username" required><br>
-			Password: <input type="password" placeholder="Enter Password" name="password" required><br>
-		    <button type="submit">Sign Up</button><br>
-		</form>
+		<div class='ui container centered grid'>
+			<div class="row">
+				<div class="ui text menu">
+		      <a class="item" href="/">
+		        <h2 class='ui header'>
+		          News Spectrum
+		        </h2>
+		      </a>
+		    </div>
+	    </div>
+
+	    <div class="row">
+				<form action="/signup" method="post" class='ui form'>
+					<div class="field">
+						<label>Name</label>
+						<input type="text" placeholder="Name" name="name" required>
+					</div>
+					<div class="field">
+						<label>Email</label>
+						<input type="text" placeholder="Email" name="email" required>
+					</div>
+					<div class="field">
+						<label>Username</label>
+						<input type="text" placeholder="Username" name="username" required>
+					</div>
+					<div class="field">
+						<label>Password</label>
+						<input type="password" placeholder="Password" name="password" required><br>
+					</div>
+			    <button type="submit" class="ui button">Sign Up</button>
+				</form>
+			</div>
+
+			<div class="row">
+				<span>Already have an account? <a href="/login"> Login here!</a></span>
+			</div>
+		</div>
+
 	</body>
 </html>

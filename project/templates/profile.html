@@ -5,7 +5,7 @@
         <title>Home</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
-        <link rel="stylehseet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
     </head>
     <body>
       <div class="ui container">
@@ -25,28 +25,36 @@
         </div>
         <div>
           <p>Here are your suggested articles to read. Liberal-Conservative = 1-9</p>
-          <div class="ui cards">
+          <div class="ui four stackable cards">
             {% for article in articles %}
               <div class="card">
                 <div class="content">
                   <div class="header">
                     {{ article.article_name }}
                   </div>
-                  <div class="meta">
+                  <!-- <div class="meta">
                     {{ article.source }}
-                  </div>
+                  </div> -->
                   <div class="description">
                     {{ article.description }}
                   </div>
                   <br>
-                  <div class="political">
+                  <!-- <div class="political">
                     Political Leaning Score: {{ article.political_leaning }}
-                  </div>
+                  </div> -->
                 </div>
                 <div class="extra content">
-                    <form action="/load_news_page/{{ article.id }} " method="post">
-                      <button class="ui basic green button">Read Article</button>
-                    </form>
+                  <div class="ui two column grid">
+                    <div class="centered column">
+                      <form action="/load_news_page/{{ article.id }}" method="post" class="left floated">
+                        <button class="ui basic green button">Read</button>
+                      </form>
+                    </div>
+                    <div class="right floated right aligned column">
+                      <i class="thumbs up icon"></i>
+                      <i class="thumbs down icon"></i>
+                    </div>
+                  </div>
                 </div>
               </div>
             {% endfor %}
