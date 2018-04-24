@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>User Profile</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    </head>
+    <body>
+      <div class="ui container">
+        <div class="ui text menu">
+          <a class="item" href="/">
+            <h2 class='ui header'>
+              News Spectrum
+            </h2>
+          </a>
+          <div class='ui right dropdown item'>
+            {{ user }}
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a class="item" href="http://localhost:5000/user">Profile</a>
+              <a class="item" href="http://localhost:5000/logout">Log Out</a>
+            </div>
+          </div>
+        </div>
+
+        <h1 class="ui header">Hello, {{ user }}.</h1>
+
+        <div class='ui segment'>
+          <div class="content">
+            <span>Your political score is {{ score }} on a scale from 1-9.</span>
+
+            <div class="ui grid">
+              <div class="left floated column">
+                Liberal
+              </div>
+              <div class="right floated column">
+                Conservative
+              </div>
+            </div>
+
+            <input type="range" list="leanings" disabled="true" value="{{ score }}">
+            <datalist id="leanings">
+              <option value="1" label="Solid Liberals"></option>
+              <option value="2"></option>
+              <option value="3"></option>
+              <option value="4"></option>
+              <option value="5" label="Bystanders"></option>
+              <option value="6"></option>
+              <option value="7"></option>
+              <option value="8"></option>
+              <option value="9" label="Core Conservatives"></option>
+            </datalist>
+          </div>
+        </div>
+      </div>
+    </body>
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('.ui.dropdown').dropdown();
+      });
+    </script>
+</html>

@@ -43,7 +43,7 @@ def login():
     login_user(user, remember=True)
     resp = make_response(redirect('/'))
     resp.set_cookie('username', username)
-    return resp 
+    return resp
 
 @app.route('/logout')
 def logout():
@@ -67,6 +67,13 @@ def signup():
     login_user(new_user)
     return redirect('/')
 
+@app.route('/user', methods=['GET'])
+def user_profile():
+    if current_user.is_authenticated:
+        return render_template("user_profile.html", user=current_user.name, score=current_user.political_score)
+    else:
+        return redirect('/')
+
 @app.route('/political-typology', methods=['POST'])
 def political_typology():
     if current_user.is_authenticated:
@@ -78,11 +85,11 @@ def political_typology():
                 "Opportunity Democrats": 2,
                 "Disaffected Democrats": 3,
                 "Devout and Diverse": 4,
-                "New Era Enterprisers": 5,
-                "Market Skeptic Republicans": 6,
-                "Country First Conservaties": 7,
-                "Core Conservatives": 8,
-                "Bystanders": 9
+                "Bystanders": 5,
+                "New Era Enterprisers": 6,
+                "Market Skeptic Republicans": 7,
+                "Country First Conservatives": 8,
+                "Core Conservatives": 9
             }
 
             try:
