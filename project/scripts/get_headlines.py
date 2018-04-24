@@ -31,7 +31,6 @@ def get_top_headlines():
         new_articles.append(Articles(title, source, description, url))
     threads = []
     for url in url_text:
-        article = Article(url,"en")
         threads.append(create_url_data_thread(url, url_text))
     for thread in threads:
         thread.join()

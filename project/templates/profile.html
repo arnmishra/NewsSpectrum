@@ -10,7 +10,7 @@
     <body>
       <div class="ui container">
         <div class="ui text menu">
-          <a class="item" href="/">
+          <a class="item" href="http://localhost:5000/">
             <h2 class='ui header'>
               News Spectrum
             </h2>
@@ -19,7 +19,7 @@
             {{ user }}
             <i class="dropdown icon"></i>
             <div class="menu">
-              <a class="item" href="/logout">Log Out</a>
+              <a class="item" href="http://localhost:5000/logout">Log Out</a>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
                 <div class="extra content">
                   <div class="ui two column grid">
                     <div class="centered column">
-                      <form action="/load_news_page/{{ article.id }}" method="post" class="left floated">
+                      <form action="http://localhost:5000/load_news_page/{{ article.id }}" method="post" class="left floated">
                         <button class="ui basic green button">Read</button>
                       </form>
                     </div>

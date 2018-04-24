@@ -21,7 +21,7 @@ chrome.extension.onRequest.addListener(function(request, sender)
  		if(username != false) {
  			returnMessage(username);
  		} else {
- 			alert('News Spectrum says: You may not be logged in!')
+ 			alert('Login to store this article to your News Spectrum account!')
  		}
  	})
 });

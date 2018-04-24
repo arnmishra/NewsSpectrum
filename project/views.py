@@ -12,16 +12,25 @@ from newspaper import Article
 def index():
     if current_user.is_authenticated:
         if current_user.political_score == 0:
-            return render_template('index.html', user=current_user.name)
+            return make_response(render_template('index.html', user=current_user.name))
         else:
             get_top_headlines()
             articles = []
             for score in current_user.target_scores:
                 articles += Articles.query.filter(Articles.political_leaning == score).all()
                 shuffle(articles)
-            return render_template('profile.html', user=current_user.name, articles=articles)
+            return make_response(render_template('profile.html', user=current_user.name, articles=articles))
     elif request.method == 'GET':
         return render_template("login.html")
+
+@app.route('/get_article_data', methods=['GET'])
+def get_article_data():
+    get_top_headlines()
+    articles = []
+    for score in current_user.target_scores:
+        articles += Articles.query.filter(Articles.political_leaning == score).all()
+        shuffle(articles)
+    return make_response(render_template('profile.html', user=current_user.name, articles=articles))
 
 @app.route('/login', methods=['POST'])
 def login():
