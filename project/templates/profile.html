@@ -51,7 +51,7 @@
                   <div class="ui two column grid">
                     <div class="centered column">
                       <form action="http://localhost:5000/load_news_page/{{ article.id }}" method="post" class="left floated">
-                        <button class="ui basic green button">Read</button>
+                        <button id="read_button_{{article.id}}" class="ui basic green button">Read</button>
                       </form>
                     </div>
                     <div class="right floated right aligned column">
@@ -60,6 +60,22 @@
                     </div>
                   </div>
                 </div>
+                <div class="ui modal">
+                <div class="header">Header</div>
+                <div class="content">
+                  <p>Hello</p>
+                  <p></p>
+                  <p></p>
+                </div>
+              </div>
+              <script>
+                document.getElementById('read_button_{{article.id}}').onclick = function() {
+                  console.log('inside here');
+                  $('.ui.modal')
+                    .modal('show')
+                  ;
+                }
+            </script>
               </div>
             {% endfor %}
           </div>

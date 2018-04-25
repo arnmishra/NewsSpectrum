@@ -134,8 +134,20 @@ def chrome_extension():
         text = article.text
         political_leaning = indicoio.political(text)
         score = calculate_political_score(political_leaning["Liberal"], political_leaning["Conservative"])
+        if score == current_user.political_score:
+            return Response(status=200)
+        if data['like'] == 'disliked':
+            current_user.change_score += 1
+        else:
+            current_user.change_score -= 1
+        if current_user.change_score == 0:
+            current_user.set_score(current_user.target_scores[1])
+        db.session.commit()
+        print(current_user.change_score)
         print("URL: ", data['url'])
+        print("like: ", data['like'])
         print(political_leaning)
         print("Political score: ", score)
+        return Response(status=200)
     return Response(status=200)
 

@@ -1,3 +1,4 @@
+var prev_url = null;
 function addButtonsToPage(bodyClassName) {
 	var elems = document.getElementsByClassName(bodyClassName);
 
@@ -9,10 +10,12 @@ function addButtonsToPage(bodyClassName) {
 	console.log(articleBody);
 
 	var likeBtn = document.createElement("BUTTON");
+	likeBtn.setAttribute("id", "likeBtn");
 	var likeText = document.createTextNode("Like Article");
 	likeBtn.appendChild(likeText);
 
 	var dislikeBtn = document.createElement("BUTTON");
+	dislikeBtn.setAttribute("id", "dislikeBtn");
 	var dislikeText = document.createTextNode("Dislike Article");
 	dislikeBtn.appendChild(dislikeText);
 
@@ -20,6 +23,20 @@ function addButtonsToPage(bodyClassName) {
 
 	articleBody.appendChild(likeBtn);
 	articleBody.appendChild(dislikeBtn);
+
+	document.getElementById('likeBtn').onclick = function() {
+		console.log('clicked like');
+		sendMessage('like');
+		document.getElementById('likeBtn').disabed = true;
+		document.getElementById('dislikeBtn').disabed = true;
+		console.log('disabled button');
+	}
+	document.getElementById('dislikeBtn').onclick = function() {
+		console.log('clicked dislike');
+		sendMessage('dislike');
+		document.getElementById('likeBtn').disabed = true;
+		document.getElementById('dislikeBtn').disabed = true;
+	}
 
 	console.log('After appending buttons to article body');
 }
@@ -52,51 +69,36 @@ function decideToSend() {
 	}
 }
 
-function showPrompt() {
-    var txt;
-    var person = prompt("Please enter your name:", "Harry Potter");
-    if (person == null || person == "") {
-        txt = "User cancelled the prompt.";
-    } else {
-        txt = "Hello " + person + "! How are you today?";
-    }
-    document.getElementById("demo").innerHTML = txt;
-}
-
-shouldSend = decideToSend();
-
-if (shouldSend) {
+function sendMessage(like) {
+	console.log(like);
+	console.log('inside sendMessage');
 	chrome.extension.sendRequest({message: "username_request"});
 	chrome.runtime.onMessage.addListener(
 	 	function(request, sender) {
-	 		
-	 		/*
-	 		need to add the like or dislike button here
-	 		and detect the click and send it in the ajax
-	 		request
-	 		*/
-	 		var div=document.createElement("div"); 
-			document.body.Child(div); 
-			div.innerText="test123";
-
 	  		username = request.message;
-	  		console.log('Sending url with username: ' + username);
-	  		var xhr =   $.ajax({
-			        url: 'http://localhost:5000/chrome_extension',
-			        type: "POST",
-			        contentType: "application/json",
-			        processData: false,
-			        data: JSON.stringify({
-			        	"username": username,
-			        	"url": document.location.href
-			        }),
-			        success: function (response) {
-			            console.log(response);
-			        },
-			        error: function (response) {
-			            console.log(response);
-			        }
+	  		if (prev_url == null || prev_url != document.location.href) {
+	  			console.log('Sending url with username: ' + username);
+		  		$.ajax({
+				        url: 'http://localhost:5000/chrome_extension',
+				        type: "POST",
+				        contentType: "application/json",
+				        processData: false,
+				        data: JSON.stringify({
+				        	"username": username,
+				        	"url": document.location.href,
+				        	"like": like
+				        }),
+				        success: function (response) {
+				            console.log(response);
+				        },
+				        error: function (response) {
+				            console.log(response);
+				        }
 	    		});
-	  		console.log(xhr);
+	    		prev_url = document.location.href;
+	  		}
 	});
+	
 }
+
+decideToSend();
