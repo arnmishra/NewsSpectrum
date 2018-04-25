@@ -29,6 +29,11 @@ if (shouldSend) {
 	chrome.runtime.onMessage.addListener(
 	 	function(request, sender) {
 	 		
+	 		/*
+	 		need to add the like or dislike button here
+	 		and detect the click and send it in the ajax
+	 		request
+	 		*/
 	 		var div=document.createElement("div"); 
 			document.body.Child(div); 
 			div.innerText="test123";
