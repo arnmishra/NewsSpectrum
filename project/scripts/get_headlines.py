@@ -51,7 +51,7 @@ def get_top_headlines():
 
 def create_url_data_thread(url, url_text):
     thread = Thread(target=get_article_data, args=(url, url_text, ))
-    thread.daemon = True
+    #thread.daemon = True
     thread.start()
     return thread
 
@@ -64,7 +64,6 @@ def get_article_data(url, url_text):
         del url_text[url]
     else:
         url_text[url] = text
-    
 
 def calculate_political_score(liberal,conservative):
     score = 0

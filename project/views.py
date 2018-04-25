@@ -45,7 +45,7 @@ def login():
     resp.set_cookie('username', username)
     return resp 
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
     res = make_response(redirect('/'))

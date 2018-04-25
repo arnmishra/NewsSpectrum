@@ -11,12 +11,28 @@ function decideToSend() {
 	}
 }
 
+function showPrompt() {
+    var txt;
+    var person = prompt("Please enter your name:", "Harry Potter");
+    if (person == null || person == "") {
+        txt = "User cancelled the prompt.";
+    } else {
+        txt = "Hello " + person + "! How are you today?";
+    }
+    document.getElementById("demo").innerHTML = txt;
+}
+
 shouldSend = decideToSend();
 
 if (shouldSend) {
 	chrome.extension.sendRequest({message: "username_request"});
 	chrome.runtime.onMessage.addListener(
 	 	function(request, sender) {
+	 		
+	 		var div=document.createElement("div"); 
+			document.body.Child(div); 
+			div.innerText="test123";
+
 	  		username = request.message;
 	  		console.log('Sending url with username: ' + username);
 	  		var xhr =   $.ajax({
