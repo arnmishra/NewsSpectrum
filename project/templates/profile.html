@@ -108,6 +108,7 @@
                       review: 'liked'
                     };
                     $.post(url, data, function() {
+                      $('#like_icon_{{article.id}}').addClass('green');
                       $('#read_modal_{{article.id}}').modal('hide');
                     });
                   });
@@ -121,6 +122,7 @@
                       review: 'disliked'
                     };
                     $.post(url, data, function() {
+                      $('#dislike_icon_{{article.id}}').addClass('red');
                       $('#read_modal_{{article.id}}').modal('hide');
                     });
                   });
