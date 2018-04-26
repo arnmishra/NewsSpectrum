@@ -70,7 +70,7 @@ def signup():
 @app.route('/user', methods=['GET'])
 def user_profile():
     if current_user.is_authenticated:
-        return render_template("user_profile.html", user=current_user.name, score=current_user.political_score)
+        return render_template("user_profile.html", user=current_user.name, score=current_user.political_score, scale=current_user.political_score*100/9)
     else:
         return redirect('/')
 
