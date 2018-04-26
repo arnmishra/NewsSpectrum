@@ -21,7 +21,7 @@
               News Spectrum
             </h2>
           </a>
-          <!--
+
           <div class='ui right dropdown item'>
             {{ user }}
             <i class="dropdown icon"></i>
@@ -30,7 +30,7 @@
               <a class="item" href="http://localhost:5000/logout">Log Out</a>
             </div>
           </div>
-          -->
+
         </div>
 
         <div>
@@ -42,9 +42,9 @@
                   <div class="header">
                     {{ article.article_name }}
                   </div>
-                  <!-- <div class="meta">
-                    {{ article.source }}
-                  </div> -->
+                  <div class="meta">
+                    {{ article.creation_date.strftime('%m/%d/%Y') }}
+                  </div>
                   <div class="description">
                     {{ article.description }}
                   </div>
