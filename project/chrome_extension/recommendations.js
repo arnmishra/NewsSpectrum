@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	checkLoggedIn("http://localhost", "remember_token", function(logged_in) {
 	    if(logged_in) {
+
 	     	var xhttp = new XMLHttpRequest();
   			xhttp.onload = function() {
 		    	if (this.readyState == 4 && this.status == 200) {

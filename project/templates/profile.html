@@ -7,6 +7,12 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic/semantic.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
     </head>
+
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+
     <body>
       <div class="ui container">
         <div class="ui text menu">
@@ -60,22 +66,64 @@
                     </div>
                   </div>
                 </div>
-                <div class="ui modal">
-                <div class="header">Header</div>
-                <div class="content">
-                  <p>Hello</p>
-                  <p></p>
-                  <p></p>
+                <div class="ui modal" id="read_modal_{{article.id}}">
+                  <div class="header">{{ article.article_name }}</div>
+                  <div class="content" id="read_modal_{{article.id}}_content">
+                    <p>{{ article.text }}</p>
+                  </div>
+                  <div class="extra content">
+                    <form action="/article_review" method="post" id="article_review_{{article.id}}">
+                      <button class='ui basic green button' name='review' value='liked' type='submit' id="like_{{article.id}}">
+                        <i class="thumbs up icon"></i>
+                        Liked Article
+                      </button>
+                      <button class='ui basic red button' name='review' value='disliked' type='submit' id="dislike_{{article.id}}">
+                        <i class="thumbs down icon"></i>
+                        Disliked Article
+                      </button>
+                      <input type="hidden" name="score" value="{{ article.political_leaning }}" id="article_score_{{article.id}}">
+                    </form>
+                  </div>
                 </div>
-              </div>
-              <script>
-                document.getElementById('read_button_{{article.id}}').onclick = function() {
-                  console.log('inside here');
-                  $('.ui.modal')
-                    .modal('show')
-                  ;
-                }
-            </script>
+                <script>
+                  $('#read_button_{{article.id}}').click(function(event) {
+                    event.preventDefault();
+
+                    console.log("#read_button_{{article.id}} was clicked!");
+                    console.log("Showing modal #read_modal_{{article.id}}");
+                    $('#read_modal_{{article.id}}').modal('show');
+                    $('#read_modal_{{article.id}}').animate({ scrollTop: 0 }, "slow");
+
+                  });
+
+                  $('#like_{{article.id}}').click(function(event) {
+                    event.preventDefault();
+
+                    var url = "http://localhost:5000/article_review";
+                    var data = {
+                      score: $('#article_score_{{article.id}}').val(),
+                      review: 'liked'
+                    };
+                    $.post(url, data, function() {
+                      $('#read_modal_{{article.id}}').modal('hide');
+                    });
+                  });
+
+                  $('#dislike_{{article.id}}').click(function(event) {
+                    event.preventDefault();
+
+                    var url = "http://localhost:5000/article_review";
+                    var data = {
+                      score: $('#article_score_{{article.id}}').val(),
+                      review: 'disliked'
+                    };
+                    $.post(url, data, function() {
+                      $('#read_modal_{{article.id}}').modal('hide');
+                    });
+                  });
+
+
+                </script>
               </div>
             {% endfor %}
           </div>
@@ -83,12 +131,8 @@
       </div>
     </body>
 
-    <script
-      src="https://code.jquery.com/jquery-3.1.1.min.js"
-      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-      crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
 
+    <script src="{{ url_for('static', filename='semantic/semantic.min.js') }}"></script>
     <script>
       $(document).ready(function() {
         $('.ui.dropdown').dropdown();
